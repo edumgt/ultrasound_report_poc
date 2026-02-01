@@ -1,9 +1,12 @@
 from __future__ import annotations
 import queue
 import numpy as np
-import sounddevice as sd
 
 class AudioCapture:
+    """
+    Microphone capture using sounddevice, but imported lazily inside start()
+    to reduce startup failures.
+    """
     def __init__(self, out_queue: "queue.Queue[np.ndarray]", sample_rate: int = 16000, block_ms: int = 500):
         self.q = out_queue
         self.sample_rate = sample_rate
@@ -14,6 +17,8 @@ class AudioCapture:
     def start(self):
         if self._running:
             return
+        import sounddevice as sd
+
         self._running = True
         self.stream = sd.InputStream(
             channels=1,

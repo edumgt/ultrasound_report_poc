@@ -6,12 +6,12 @@ from faster_whisper import WhisperModel
 
 @dataclass
 class STTConfig:
-    model_size: str = "small"
-    device: str = "cpu"            # gpu 가능하면 "cuda"
-    compute_type: str = "int8"     # cpu면 int8, gpu면 float16 등
-    beam_size: int = 3
-    vad_filter: bool = True
-    language: Optional[str] = None # 자동감지(한/영 혼용)
+    model_size: str = "tiny"
+    device: str = "cpu"
+    compute_type: str = "int8"
+    beam_size: int = 1
+    vad_filter: bool = False
+    language: Optional[str] = None
     initial_prompt: str = ""
 
 class WhisperSTT:

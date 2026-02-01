@@ -14,7 +14,6 @@ class TermCorrector:
     def __init__(self, terms: List[Term], threshold: float = 0.86):
         self.terms = terms
         self.threshold = threshold
-
         self.direct: Dict[str, str] = {}
         self.key_to_canonical: Dict[str, str] = {}
 
@@ -36,7 +35,6 @@ class TermCorrector:
         lowered = raw.lower()
         changes: List[Dict] = []
 
-        # 1) direct replace (긴 alias 우선)
         for alias_l, canon in sorted(self.direct.items(), key=lambda x: -len(x[0])):
             if alias_l and alias_l in lowered:
                 before = raw
@@ -45,7 +43,6 @@ class TermCorrector:
                     changes.append({"from": alias_l, "to": canon, "score": 1.0})
                     lowered = raw.lower()
 
-        # 2) fuzzy correction (1~3 토큰 창)
         tokens = raw.split()
         i = 0
         while i < len(tokens):
@@ -60,7 +57,6 @@ class TermCorrector:
 
                 best_score = 0.0
                 best_to = None
-
                 for t in self.terms:
                     for a in [t.canonical] + t.aliases:
                         s = lev_ratio(cand_l, a.lower())
@@ -73,10 +69,7 @@ class TermCorrector:
                     changes.append({"from": cand, "to": best_to, "score": float(best_score)})
                     replaced = True
                     break
-            if replaced:
-                i += 1
-            else:
-                i += 1
+            i += 1 if not replaced else 1
 
         return " ".join(tokens), changes
 
