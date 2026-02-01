@@ -111,6 +111,7 @@ class MainWindow(QMainWindow):
 
         # Subprocess handles audio+STT
         prompt = self._build_prompt()
+        lang = os.environ.get('STT_LANG', 'ko')
         self._stt_cfg = dict(
             model_size="tiny",
             device="cpu",

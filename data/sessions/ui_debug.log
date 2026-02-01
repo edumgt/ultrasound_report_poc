@@ -31,3 +31,43 @@
 [17:50:58] text: Hello.
 [17:51:05] text: 안하십니까.
 [17:51:14] text: ありがと-
+[17:57:04] Starting STT subprocess...
+[17:57:04] STT subprocess started pid=14420
+[17:57:05] status: Loading STT model (tiny) in subprocess...
+[17:57:07] status: STT model loaded.
+[17:57:07] status: Listening (subprocess)...
+[17:57:10] status: Too quiet (rms=0.0001)
+[17:57:12] status: Too quiet (rms=0.0002)
+[17:57:15] status: Too quiet (rms=0.0002)
+[17:57:17] status: Too quiet (rms=0.0000)
+[17:57:20] status: Too quiet (rms=0.0002)
+[17:57:22] status: Too quiet (rms=0.0000)
+[17:57:25] status: Too quiet (rms=0.0000)
+[17:57:27] status: Too quiet (rms=0.0001)
+[17:57:30] status: Too quiet (rms=0.0000)
+[17:57:32] status: Too quiet (rms=0.0001)
+[17:57:35] status: Too quiet (rms=0.0001)
+[17:57:37] status: Too quiet (rms=0.0001)
+[17:57:40] status: Too quiet (rms=0.0000)
+[17:57:42] status: Too quiet (rms=0.0001)
+[17:57:45] status: Too quiet (rms=0.0002)
+[17:57:47] status: Too quiet (rms=0.0000)
+[17:57:50] status: Too quiet (rms=0.0000)
+[17:57:52] status: Too quiet (rms=0.0000)
+[17:57:55] status: Too quiet (rms=0.0000)
+[17:57:57] status: Too quiet (rms=0.0000)
+[17:58:00] status: Too quiet (rms=0.0002)
+[17:58:02] status: Too quiet (rms=0.0002)
+[17:58:05] status: Too quiet (rms=0.0000)
+[17:58:07] status: Too quiet (rms=0.0000)
+[17:58:10] status: Too quiet (rms=0.0000)
+[17:58:12] status: Too quiet (rms=0.0002)
+[17:58:15] status: Too quiet (rms=0.0002)
+[17:58:17] status: Too quiet (rms=0.0002)
+[17:58:20] status: Too quiet (rms=0.0004)
+[17:58:22] status: Too quiet (rms=0.0000)
+[17:58:25] status: Too quiet (rms=0.0000)
+[17:58:27] status: Too quiet (rms=0.0000)
+[17:58:30] status: Too quiet (rms=0.0000)
+[17:58:32] status: Too quiet (rms=0.0002)
+[17:58:35] status: Too quiet (rms=0.0000)
