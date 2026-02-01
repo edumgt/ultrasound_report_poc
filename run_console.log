@@ -1,0 +1,13 @@
+[app] starting...
+[app] Qt imported
+[app] MainWindow imported
+[app] QApplication created
+[app] MainWindow created
+[app] window shown; entering event loop
+[17:36:36] Starting STT subprocess...
+[17:36:36] STT subprocess started pid=8272
+[app] starting...
+[app] Qt imported
+[app] MainWindow imported
+[17:36:37] status: Loading STT model (tiny) in subprocess...
+[17:36:47] STT subprocess exited. exitcode=3221225477

@@ -1,6 +1,8 @@
 from __future__ import annotations
 import os
+import datetime
 import multiprocessing as mp
+from queue import Empty
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QKeySequence, QShortcut
@@ -20,6 +22,16 @@ if not SAFE_MODE:
 
 
 class MainWindow(QMainWindow):
+    def _log(self, msg: str):
+        ts = datetime.datetime.now().strftime('%H:%M:%S')
+        line = f'[{ts}] {msg}'
+        print(line, flush=True)
+        try:
+            with open(os.path.join(self.sessions_dir, 'ui_debug.log'), 'a', encoding='utf-8') as f:
+                f.write(line + '\n')
+        except Exception:
+            pass
+
     def _setup_ui_safe_only(self):
         self.setWindowTitle("Ultrasound Auto Report PoC (SAFE_MODE)")
         self.status_label = QLabel("SAFE_MODE=1 (UI only)")
@@ -144,6 +156,7 @@ class MainWindow(QMainWindow):
         if self._stt_proc and self._stt_proc.is_alive():
             return
         self.status_label.setText("Starting STT subprocess...")
+        self._log("Starting STT subprocess...")
         self._out_q = mp.Queue()
         self._ctrl_q = mp.Queue()
         self._stt_proc = mp.Process(
@@ -152,6 +165,7 @@ class MainWindow(QMainWindow):
             daemon=True
         )
         self._stt_proc.start()
+        self._log(f'STT subprocess started pid={self._stt_proc.pid}')
 
     def _stop_stt_process(self):
         if not self._stt_proc:
@@ -183,24 +197,55 @@ class MainWindow(QMainWindow):
         self.status_label.setText("Reset.")
 
     def _drain_out_queue(self):
-        if not self._out_q:
+        # If subprocess died, surface it
+        if self._stt_proc is not None and (not self._stt_proc.is_alive()):
+            code = self._stt_proc.exitcode
+            self._log(f"STT subprocess exited. exitcode={code}")
+            self.status_label.setText(f"STT subprocess exited (code {code})")
+            # cleanup handles
+            self._stt_proc = None
+            self._out_q = None
+            self._ctrl_q = None
             return
-        try:
-            while True:
+
+        if self._out_q is None:
+            return
+
+        # Drain messages
+        drained_any = False
+        while True:
+            try:
                 msg = self._out_q.get_nowait()
+            except Empty:
+                break
+            except Exception as e:
+                self._log(f"Queue read error: {e!r}")
+                break
+
+            drained_any = True
+            try:
                 mtype = msg.get("type")
                 if mtype == "status":
-                    self.status_label.setText(msg.get("msg", ""))
+                    s = msg.get("msg", "")
+                    self.status_label.setText(s)
+                    self._log(f"status: {s}")
                 elif mtype == "error":
-                    QMessageBox.critical(self, "STT Error", msg.get("msg", ""))
+                    em = msg.get("msg", "")
+                    self._log(f"error: {em}")
+                    QMessageBox.critical(self, "STT Error", em)
                 elif mtype == "text":
                     text = msg.get("text", "")
                     if text:
                         corrected, _changes = self.corrector.correct(text)
                         self.text_live.append(corrected)
                         self.text_edit.append(corrected)
-        except Exception:
-            pass
+                        self._log(f"text: {corrected}")
+            except Exception as e:
+                self._log(f"Message handling error: {e!r}")
+
+        # If started but never received anything for a while, keep UI responsive (no-op)
+        return
+
 
     def generate_report(self):
         final_text = self.text_edit.toPlainText().strip()
